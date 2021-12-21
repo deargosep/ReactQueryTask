@@ -18,7 +18,10 @@ import Wrapper from '@components/Wrapper'
 import SortBy from '@components/SortBy'
 import axios from '@api'
 import { Card } from 'react-native-paper'
-import { _getClinics } from '@api/http/clinics'
+import {
+  setMoreClinics as getMoreClinics,
+  useGetClinics
+} from '@api/http/clinics'
 
 const First = () => {
   const { t, i18n } = useTranslation()
@@ -26,21 +29,27 @@ const First = () => {
 
   const [sort, setSort] = React.useState('alphabet')
 
-  const medicalInstitutions = useQuery(sort, _getClinics)
+  const queryClient = useQueryClient()
 
-  // Mutations
-  // const mutation = useMutation(postTodo, {
+  const clinics = useGetClinics({ sortBy: sort })
+  const { data } = clinics
+
+  // const mutation = useMutation(getMoreClinics, {
   //   onSuccess: () => {
   //     // Invalidate and refetch
-  //     queryClient.invalidateQueries('todos')
+  //     queryClient.invalidateQueries('clinics')
   //   }
   // })
+  // const setMoreClinics = () => {
+  // mutation.mutate({
 
-  const testQuery = () => {
-    medicalInstitutions.refetch().then(({ data }) => {
-      console.log('Refetched: ', data)
-    })
+  // })
+  // }
+
+  const testQuery = (page) => {
+    return clinics.refetch({ refetchPage: 1 })
   }
+
   React.useEffect(() => {
     testQuery()
   }, [sort])
@@ -62,21 +71,34 @@ const First = () => {
       <FlatList
         refreshControl={
           <RefreshControl
-            refreshing={medicalInstitutions.isLoading}
-            onRefresh={testQuery}
+            refreshing={clinics.isLoading || clinics.isFetchingNextPage}
+            onRefresh={() => clinics.refetch()}
           />
         }
-        extraData={medicalInstitutions}
-        refreshing={medicalInstitutions.isLoading}
-        data={medicalInstitutions?.data?.data.medicalInstitutions ?? []}
+        refreshing={clinics.isLoading}
+        data={data?.pages ?? []}
+        extraData={data?.pages}
+        onEndReachedThreshold={0.1}
+        onEndReached={() => {
+          clinics.fetchNextPage()
+          console.log(data?.pages)
+        }}
         renderItem={({ item }) => {
           return (
-            <Card style={styles().card} elevation={3}>
-              <Card.Title
-                subtitle={'Дистанция: ' + item.distance}
-                title={item.title}
-              />
-            </Card>
+            <FlatList
+              keyExtractor={(item) => item.id.toString()}
+              data={item.medicalInstitutions}
+              renderItem={({ item }) => {
+                return (
+                  <Card style={styles().card} elevation={3}>
+                    <Card.Title
+                      subtitle={'Дистанция: ' + item.distance}
+                      title={item.title}
+                    />
+                  </Card>
+                )
+              }}
+            />
           )
         }}
       />

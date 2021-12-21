@@ -47,7 +47,7 @@ const Choose = ({ navigation, route }) => {
         }
       />
       <Spacer size={12} />
-      {!route.params.isRegister && (
+      {/* {!route.params.isRegister && (
         <ButtonMD
           mode={'text'}
           text={'Я специалист'}
@@ -58,7 +58,7 @@ const Choose = ({ navigation, route }) => {
             })
           }
         />
-      )}
+      )} */}
     </Wrapper>
   )
 }
