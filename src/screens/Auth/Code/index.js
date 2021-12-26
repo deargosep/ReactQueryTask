@@ -17,10 +17,12 @@ import { sendCode as sendCodeAction } from '@store/modules/auth/actions'
 import { saveData, JWT_STORAGE_KEY } from '../../../utils/asyncStorage'
 import {
   getCurrentUser,
-  login,
+  // login,
   registerByPhone
 } from '@store/modules/auth/actions'
 import { getCurrentSpecialist } from '@store/modules/auth/actions'
+import { useLogin } from '@store/modules/auth/actions'
+import { useSendCode } from '@store/modules/auth/actions'
 
 const CELL_COUNT = 4
 
@@ -32,9 +34,10 @@ const Code = ({ navigation, route }) => {
   const loginType =
     route.params.loginType === 'specialist' ? 'specialist' : 'user'
 
-  const [isLoading, setIsLoading] = useState(false)
-
   const [value, setValue] = useState(route.params.code ? route.params.code : '')
+
+  const [registerData, setRegisterData] = useState({})
+
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT })
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
@@ -43,49 +46,83 @@ const Code = ({ navigation, route }) => {
 
   const [error, setError] = useState(null)
 
+  const registerByPhone = useLogin({
+    phone: route.params.user.phone,
+    source: 'current'
+  })
+
+  const login = useLogin({
+    login: route.params.user.phone,
+    userType: loginType
+  })
+  console.log('number:', route.params.user)
+  const code = useSendCode({
+    phone: route.params.user.phone,
+    password: value,
+    userType: loginType
+  })
+
   const [isResendCode, setResendCode] = useState(false)
 
   const resendCode = async () => {
     if (isResendCode) return
+    let data = { phone: route.params.user.phone, source: 'current' }
+    setRegisterData(data)
     setResendCode(true)
-    setIsLoading(true)
     if (route.params.isRegister) {
-      let data = { phone: route.params.user.phone, source: 'current' }
       if (route.params.inn) {
         data.inn = route.params.inn
         data.source = route.params.loginType
       }
 
-      dispatch(
-        registerByPhone(
-          data,
-          (response) => {
-            setValue(response.smsCode)
-            setIsLoading(false)
-          },
-          (error) => {
-            setIsLoading(false)
-            if (error.status === 403)
-              setFieldError('phone', t('auth.enterLogin.errors.phoneExists'))
-          }
-        )
-      )
-    } else {
-      dispatch(
-        login(
-          { login: route.params.user.phone, userType: loginType },
-          (response) => {
-            setValue(response.smsCode)
-            setIsLoading(false)
-          }
-        ),
-        (error) => {
-          setIsLoading(false)
-          if (error.status === 404)
-            setFieldError('phone', t('auth.enterLogin.errors.code'))
-          console.log(error)
+      registerByPhone.refetch().then((res) => {
+        if (res.isSuccess) {
+          setValue(res.data.smsCode)
         }
-      )
+        if (res.isError) {
+          if (res.status === 403)
+            setFieldError('phone', t('auth.enterLogin.errors.phoneExists'))
+        }
+      })
+      // dispatch(
+      //   registerByPhone(
+      //     data,
+      //     (response) => {
+      //       setValue(response.smsCode)
+      //     },
+      //     (error) => {
+      //       if (error.status === 403)
+      //         setFieldError('phone', t('auth.enterLogin.errors.phoneExists'))
+      //     }
+      //   )
+      // )
+    } else {
+      login.refetch().then((res) => {
+        if (res.isSuccess) {
+          setValue(res.data.smsCode)
+        }
+        if (res.isError) {
+          if (res.status === 404 || res.status === 401) {
+            setFieldError('phone', t('auth.enterLogin.errors.code'))
+            console.log(res)
+          }
+        }
+      })
+      // dispatch(
+      //   login(
+      //     { login: route.params.user.phone, userType: loginType },
+      //     (response) => {
+      //       setValue(response.smsCode)
+      //       setIsLoading(false)
+      //     }
+      //   ),
+      //   (error) => {
+      //     setIsLoading(false)
+      //     if (error.status === 404)
+      //       setFieldError('phone', t('auth.enterLogin.errors.code'))
+      //     console.log(error)
+      //   }
+      // )
     }
     setError(null)
     setTimeout(() => setResendCode(false), 60000)
@@ -96,28 +133,37 @@ const Code = ({ navigation, route }) => {
       setError('auth.code.error')
       return
     }
-    setIsLoading(true)
-    dispatch(
-      sendCodeAction(
-        {
-          phone: route.params.user.phone,
-          password: value,
-          userType: loginType
-        },
-        (response) => {
-          saveData(response, JWT_STORAGE_KEY)
-          setIsLoading(false)
-          if (route.params.loginType === 'specialist')
-            dispatch(getCurrentSpecialist())
-          else dispatch(getCurrentUser())
-        },
-        (error) => {
-          setIsLoading(false)
-          if (error.status === 401 || error.status === 404)
-            setError('auth.code.error')
-        }
-      )
-    )
+    code.refetch().then((res) => {
+      if (res.isSuccess) {
+        saveData(res, JWT_STORAGE_KEY)
+        if (route.params.loginType === 'specialist')
+          dispatch(getCurrentSpecialist())
+        else dispatch(getCurrentUser())
+      }
+      if (res.isError) {
+        if (res.status === 401 || res.status === 404)
+          setError('auth.code.error')
+      }
+    })
+    // dispatch(
+    //   sendCodeAction(
+    //     {
+    //       phone: route.params.user.phone,
+    //       password: value,
+    //       userType: loginType
+    //     },
+    //     (response) => {
+    //       saveData(response, JWT_STORAGE_KEY)
+    //       if (route.params.loginType === 'specialist')
+    //         dispatch(getCurrentSpecialist())
+    //       else dispatch(getCurrentUser())
+    //     },
+    //     (error) => {
+    //       if (error.status === 401 || error.status === 404)
+    //         setError('auth.code.error')
+    //     }
+    //   )
+    // )
   }
 
   const changePhone = () => {
@@ -133,7 +179,7 @@ const Code = ({ navigation, route }) => {
       <Spacer size={20} />
       <View style={styles().phoneNumber}>
         <Text style={styles().phoneNumberValue}>
-          {route.params.user?.rawPhone}
+          {route.params.user?.phone}
         </Text>
         <Spacer size={12} />
         <TouchableOpacity onPress={() => changePhone()}>
@@ -177,7 +223,7 @@ const Code = ({ navigation, route }) => {
       )}
       <Spacer size={28} />
       <ButtonMD
-        isLoading={isLoading}
+        isLoading={login.isLoading || registerByPhone.isLoading}
         handlePress={() => sendCode()}
         text={t('auth.code.button')}
       />

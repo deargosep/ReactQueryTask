@@ -12,29 +12,23 @@ import {
   _editProfile,
   _uploadPhoto
 } from '../../../api/http/user'
+import { useQuery } from 'react-query'
 
-export const SET_AUTH = createRequestStatuses('SET_AUTH')
-export const login = (data, callbackSuccess, callbackError) =>
-  makeRequest(SET_AUTH, _login, data, callbackSuccess, callbackError)
+const defaultParams = {
+  enabled: false
+}
 
-export const SET_USER = createRequestStatuses('SET_USER')
-export const getCurrentUser = (data, callbackSuccess, callbackError) =>
-  makeRequest(SET_USER, _getCurrentUser, data, callbackSuccess, callbackError)
+export const useRegisterByPhone = (data) =>
+  useQuery('registerByPhone', () => _registerByPhone(data), defaultParams)
 
-export const registerByPhone = (data, callbackSuccess, callbackError) =>
-  makeSimpleRequest(_registerByPhone, data, callbackSuccess, callbackError)
+export const useLogin = (data) =>
+  useQuery('login', () => _login(data), defaultParams)
 
-export const sendPhone = (data, callbackSuccess, callbackError) =>
-  makeSimpleRequest(_login, data, callbackSuccess, callbackError)
+export const useSendCode = (data) =>
+  useQuery('sendCode', () => _sendCode(data), defaultParams)
 
-export const sendINN = (data, callbackSuccess, callbackError) =>
-  makeSimpleRequest(_login, data, callbackSuccess, callbackError)
+export const useEditProfile = (data) =>
+  useQuery('editProfile', () => _editProfile(data), defaultParams)
 
-export const sendCode = (data, callbackSuccess, callbackError) =>
-  makeSimpleRequest(_sendCode, data, callbackSuccess, callbackError)
-
-export const editProfile = (data, callbackSuccess, callbackError) =>
-  makeSimpleRequest(_editProfile, data, callbackSuccess, callbackError)
-
-export const uploadAvatar = (data, callbackSuccess, callbackError) =>
-  makeSimpleRequest(_uploadPhoto, data, callbackSuccess, callbackError)
+export const useUploadPhoto = (data) =>
+  useQuery('uploadPhoto', () => _uploadPhoto(data), defaultParams)

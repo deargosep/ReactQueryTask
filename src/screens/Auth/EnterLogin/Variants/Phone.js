@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text } from 'react-native'
 import styles from '../styles'
 import { useTranslation } from 'react-i18next'
@@ -11,7 +11,8 @@ import TextInputMask from 'react-native-text-input-mask'
 import ButtonMD from '@components/Button'
 import Spacer from '@components/Spacer'
 import { useDispatch } from 'react-redux'
-import { registerByPhone, login } from '@store/modules/auth/actions'
+import { registerByPhone } from '@store/modules/auth/actions'
+import { useLogin } from '@store/modules/auth/actions'
 
 const Phone = ({ navigation, route, specialist }) => {
   const { t } = useTranslation()
@@ -20,15 +21,26 @@ const Phone = ({ navigation, route, specialist }) => {
   const loginType =
     route.params.loginType === 'specialist' ? 'specialist' : 'user'
 
+  const [number, setNumber] = useState('')
+
   const phoneSchema = Yup.object().shape({
     phone: Yup.string()
-      .min(16, t('auth.enterLogin.errors.phone'))
+      .min(16, t('auth.enterLogin.errors.phone.min'))
       .required(t('auth.enterLogin.errors.phone'))
+    // TODO: Fix schema thinking there is no phone inputted when onChangeText prop is used
   })
 
-  const [isLoading, setIsLoading] = useState(false)
+  const login = useLogin({
+    login: number,
+    source: 'current',
+    userType: loginType
+  })
 
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    console.log(number)
+  }, [number])
 
   const validatePhone = (phone) => {
     return `${phone.substring(0, 4)}${phone.substring(5, 8)}${phone.substring(
@@ -38,54 +50,41 @@ const Phone = ({ navigation, route, specialist }) => {
   }
 
   const sendPhone = (rawPhone, setFieldError) => {
-    setIsLoading(true)
     const phone = validatePhone(rawPhone)
     console.log(route.params)
+    // setLoginData({ phone, source: 'current' })
     if (route.params.isRegister) {
-      dispatch(
-        registerByPhone(
-          { phone, source: 'current' },
-          (response) => {
-            setIsLoading(false)
-            navigation.navigate('Code', {
-              user: { rawPhone, phone },
-              isRegister: route.params.isRegister,
-              loginType: loginType,
-              code: response.smsCode
-            })
-          },
-          (error) => {
-            setIsLoading(false)
-            console.log(error.status)
-            if (error.status === 403)
-              setFieldError('phone', t('auth.enterLogin.errors.phoneExists'))
-          }
-        )
-      )
+      login.refetch().then((res) => {
+        if (res.isSuccess) {
+          navigation.navigate('Code', {
+            user: { rawPhone, phone: number },
+            isRegister: route.params.isRegister,
+            loginType: loginType,
+            code: res.data.data.smsCode
+          })
+        }
+        if (res.isError) {
+          console.log(res.error.status)
+          if (res.status === 403)
+            setFieldError('phone', t('auth.enterLogin.errors.phoneExists'))
+        }
+      })
     } else {
-      dispatch(
-        login(
-          {
-            login: phone,
-            userType: loginType
-          },
-          (response) => {
-            setIsLoading(false)
-            navigation.navigate('Code', {
-              user: { rawPhone, phone },
-              isRegister: route.params.isRegister,
-              loginType: loginType,
-              code: response.smsCode
-            })
-          },
-          (error) => {
-            setIsLoading(false)
-            console.log(error.status)
-            if (error.status === 404)
-              setFieldError('phone', t('auth.enterLogin.errors.phoneNotExists'))
-          }
-        )
-      )
+      login.refetch().then((res) => {
+        if (res.isSuccess) {
+          navigation.navigate('Code', {
+            user: { rawPhone, phone: number },
+            isRegister: route.params.isRegister,
+            loginType: loginType,
+            code: res.data.data.smsCode
+          })
+        }
+        if (res.isError) {
+          console.log(res.error.status)
+          if (res.status === 404)
+            setFieldError('phone', t('auth.enterLogin.errors.phoneNotExists'))
+        }
+      })
     }
   }
 
@@ -94,10 +93,10 @@ const Phone = ({ navigation, route, specialist }) => {
       initialValues={{
         phone: route.params.user?.phone ? route.params.user.phone : ''
       }}
-      onSubmit={(values, { setFieldError }) =>
+      onSubmit={(values, { setFieldError }) => {
         sendPhone(values.phone, setFieldError)
-      }
-      validationSchema={phoneSchema}
+      }}
+      // validationSchema={phoneSchema}
     >
       {(formik) => (
         <Wrapper>
@@ -128,6 +127,9 @@ const Phone = ({ navigation, route, specialist }) => {
             label="Номер телефона"
             fieldName="phone"
             formik={formik}
+            onChangeText={(formatted) => {
+              setNumber(validatePhone(formatted))
+            }}
             render={(props) => (
               <TextInputMask {...props} mask="+996 [000] [000]-[000]" />
             )}
@@ -140,7 +142,7 @@ const Phone = ({ navigation, route, specialist }) => {
               }.enterLogin.buttons.phone.enter`
             )}
             handlePress={formik.handleSubmit}
-            isLoading={isLoading}
+            isLoading={login.isLoading}
           />
           <Spacer size={15} />
           {/* <ButtonMD

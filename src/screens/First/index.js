@@ -18,10 +18,7 @@ import Wrapper from '@components/Wrapper'
 import SortBy from '@components/SortBy'
 import axios from '@api'
 import { Card } from 'react-native-paper'
-import {
-  setMoreClinics as getMoreClinics,
-  useGetClinics
-} from '@api/http/clinics'
+import { useGetClinics } from '@store/modules/clinics'
 
 const First = () => {
   const { t, i18n } = useTranslation()
@@ -29,44 +26,19 @@ const First = () => {
 
   const [sort, setSort] = React.useState('alphabet')
 
-  const queryClient = useQueryClient()
-
   const clinics = useGetClinics({ sortBy: sort })
   const { data } = clinics
 
-  // const mutation = useMutation(getMoreClinics, {
-  //   onSuccess: () => {
-  //     // Invalidate and refetch
-  //     queryClient.invalidateQueries('clinics')
-  //   }
-  // })
-  // const setMoreClinics = () => {
-  // mutation.mutate({
-
-  // })
-  // }
-
-  const testQuery = (page) => {
+  const initQuery = () => {
     return clinics.refetch({ refetchPage: 1 })
   }
 
   React.useEffect(() => {
-    testQuery()
+    initQuery()
   }, [sort])
 
   return (
     <Wrapper otherStyles={styles().page}>
-      {/* <Text style={styles().text}>App template</Text> */}
-      {/* <Text style={styles().subText}>
-        {t('helloUser', { name: 'DarkKnight' })}
-      </Text>
-      <Button
-        title="Сменить язык"
-        onPress={() =>
-          i18n.changeLanguage(i18n.language !== 'ru' ? 'ru' : 'en')
-        }
-      /> */}
-      <ButtonMD text="RQuery" handlePress={testQuery} />
       <SortBy sort={sort} setSort={setSort} />
       <FlatList
         refreshControl={
@@ -75,13 +47,13 @@ const First = () => {
             onRefresh={() => clinics.refetch()}
           />
         }
+        keyExtractor={(item, index) => index.toString()}
         refreshing={clinics.isLoading}
         data={data?.pages ?? []}
         extraData={data?.pages}
         onEndReachedThreshold={0.1}
         onEndReached={() => {
           clinics.fetchNextPage()
-          console.log(data?.pages)
         }}
         renderItem={({ item }) => {
           return (
