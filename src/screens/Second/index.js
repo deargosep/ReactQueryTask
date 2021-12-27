@@ -11,12 +11,14 @@ import { useDispatch } from 'react-redux'
 import { JWT_STORAGE_KEY, removeItemValue } from '@utils/asyncStorage'
 import { getCurrentUser } from '@store/modules/auth/actions'
 import Wrapper from '@components/Wrapper'
+import { useCurrentUser } from '@store/modules/auth/actions'
 
 const Second = () => {
-  const dispatch = useDispatch()
+  const currentUserQuery = useCurrentUser()
+
   const logout = () => {
     removeItemValue(JWT_STORAGE_KEY)
-    dispatch(getCurrentUser())
+    currentUserQuery.refetch()
   }
   return (
     <Wrapper otherStyles={styles().page}>

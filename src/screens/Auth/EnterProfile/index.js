@@ -21,6 +21,7 @@ import {
 } from '@store/modules/auth/actions'
 import { setModal } from '@store/modules/modals/actions'
 import { currentUserSelector } from '@store/selectors/auth'
+import { useQueryClient } from 'react-query'
 
 const EnterProfile = ({ navigation, route }) => {
   const { t } = useTranslation()
@@ -30,7 +31,11 @@ const EnterProfile = ({ navigation, route }) => {
 
   const [isLoading, setIsLoading] = useState(false)
 
-  const user = useSelector(currentUserSelector)
+  const queryClient = useQueryClient()
+
+  // const user = useSelector(currentUserSelector)
+  const user = queryClient.getQueryData('getCurrentUser')
+  console.log(user)
 
   const profileSchema = Yup.object().shape({
     fio: Yup.string().required(t('auth.enterProfile.form.errors.fio')),

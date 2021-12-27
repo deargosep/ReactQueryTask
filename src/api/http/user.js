@@ -1,6 +1,8 @@
 import axios from '../index'
 
 export const _getCurrentUser = (data) => axios.get('/users/current', data)
+export const _getCurrentSpecialist = (data) =>
+  axios.get('/specialists/current', data)
 
 export const _loginDevice = (data) => axios.post('/devices/', data)
 

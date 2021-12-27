@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import TabNavigator from './TabNavigator'
@@ -8,32 +8,33 @@ import {
   currentUserLoadingSelector,
   currentUserSelector
 } from '@store/selectors/auth'
-import { getCurrentUser } from '@store/modules/auth/actions'
+// import { getCurrentUser } from '@store/modules/auth/actions'
 import EnterProfile from '@screens/Auth/EnterProfile'
+import { useCurrentUser } from '@store/modules/auth/actions'
+import { useQuery, QueryCache, useQueryClient } from 'react-query'
 
 const Stack = createNativeStackNavigator()
+
+const queryCache = new QueryCache({
+  onError: (error) => {
+    console.log(error)
+  },
+  onSuccess: (data) => {
+    console.log(data)
+  }
+})
 
 const AppRouter = () => {
   const dispatch = useDispatch()
 
-  const currentUser = useSelector(currentUserSelector)
-  const isLoading = useSelector(currentUserLoadingSelector)
+  const currentUserQuery = useCurrentUser({ enabled: true })
+  const queryClient = useQueryClient()
+  const currentUser = queryClient.getQueryData('getCurrentUser').data
+  // currentUserQuery.data?.data
+  // queryCache.subscribe((ev) => console.log(ev))
+  // const currentUserQuery.isLoading = useSelector(currentUserLoadingSelector)
 
-  useEffect(() => {
-    dispatch(
-      getCurrentUser(
-        {},
-        () => {
-          SplashScreen.hide()
-        },
-        () => {
-          SplashScreen.hide()
-        }
-      )
-    )
-  }, [])
-
-  if (isLoading) return null
+  if (currentUserQuery.isLoading) return null
   if (currentUser && (currentUser.fullName || currentUser.photo)) {
     return (
       <Stack.Navigator

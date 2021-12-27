@@ -20,9 +20,13 @@ import {
   // login,
   registerByPhone
 } from '@store/modules/auth/actions'
-import { getCurrentSpecialist } from '@store/modules/auth/actions'
-import { useLogin } from '@store/modules/auth/actions'
-import { useSendCode } from '@store/modules/auth/actions'
+// import { getCurrentSpecialist } from '@store/modules/auth/actions'
+import {
+  useLogin,
+  useCurrentUser,
+  useSendCode
+} from '@store/modules/auth/actions'
+import { useQuery, queryCache, QueryCache, useQueryClient } from 'react-query'
 
 const CELL_COUNT = 4
 
@@ -45,6 +49,12 @@ const Code = ({ navigation, route }) => {
   })
 
   const [error, setError] = useState(null)
+
+  const queryClient = useQueryClient()
+
+  const currentUserQuery = useCurrentUser()
+  const currentUser = queryClient.getQueryData('getCurrentUser').data
+  console.log(currentUser)
 
   const registerByPhone = useLogin({
     phone: route.params.user.phone,
@@ -135,10 +145,11 @@ const Code = ({ navigation, route }) => {
     }
     code.refetch().then((res) => {
       if (res.isSuccess) {
-        saveData(res, JWT_STORAGE_KEY)
+        console.log(res.data.data)
+        saveData(res.data.data, JWT_STORAGE_KEY)
         if (route.params.loginType === 'specialist')
           dispatch(getCurrentSpecialist())
-        else dispatch(getCurrentUser())
+        else currentUserQuery.refetch()
       }
       if (res.isError) {
         if (res.status === 401 || res.status === 404)

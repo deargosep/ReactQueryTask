@@ -6,6 +6,7 @@ import {
 import {
   _login,
   _getCurrentUser,
+  _getCurrentSpecialist,
   _logout,
   _registerByPhone,
   _sendCode,
@@ -15,7 +16,8 @@ import {
 import { useQuery } from 'react-query'
 
 const defaultParams = {
-  enabled: false
+  enabled: false,
+  retry: false
 }
 
 export const useRegisterByPhone = (data) =>
@@ -32,3 +34,9 @@ export const useEditProfile = (data) =>
 
 export const useUploadPhoto = (data) =>
   useQuery('uploadPhoto', () => _uploadPhoto(data), defaultParams)
+
+export const useCurrentUser = (data) =>
+  useQuery('getCurrentUser', _getCurrentUser, { ...defaultParams, ...data })
+
+export const useCurrentSpecialist = (data) =>
+  useQuery('getCurrentSpecialist', _getCurrentSpecialist, defaultParams)
