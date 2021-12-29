@@ -8,11 +8,16 @@ import ButtonMD from '@components/Button'
 import { useDispatch, useSelector } from 'react-redux'
 import Spacer from '@components/Spacer'
 import { setModal } from '@store/modules/modals/actions'
+import { useSharedState } from 'store/modules/root'
 
 const BirthDate = ({ navigation }) => {
   const { t } = useTranslation()
   const { Images } = useTheme()
+
   const modal = useSelector((state) => state.modal)
+
+  // const [modal, setModal] = useSharedState('modal', )
+
   const dispatch = useDispatch()
 
   const [currentPickedDay, setCurrentPickedDay] = useState(null)
@@ -41,7 +46,7 @@ const BirthDate = ({ navigation }) => {
         text={t('modals.birthDate')}
         handlePress={() => {
           modal.modalAction(currentPickedDay.fullDate)
-          dispatch(setModal({ modal: '' }))
+          // dispatch(setModal({ modal: '' }))
         }}
         disabled={disabledButton}
       />

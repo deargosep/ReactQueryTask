@@ -53,7 +53,7 @@ const Code = ({ navigation, route }) => {
   const queryClient = useQueryClient()
 
   const currentUserQuery = useCurrentUser()
-  const currentUser = queryClient.getQueryData('getCurrentUser').data
+  const currentUser = currentUserQuery?.data?.data
   console.log(currentUser)
 
   const registerByPhone = useLogin({
@@ -145,11 +145,8 @@ const Code = ({ navigation, route }) => {
     }
     code.refetch().then((res) => {
       if (res.isSuccess) {
-        console.log(res.data.data)
         saveData(res.data.data, JWT_STORAGE_KEY)
-        if (route.params.loginType === 'specialist')
-          dispatch(getCurrentSpecialist())
-        else currentUserQuery.refetch()
+        currentUserQuery.refetch()
       }
       if (res.isError) {
         if (res.status === 401 || res.status === 404)

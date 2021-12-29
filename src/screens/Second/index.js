@@ -13,7 +13,7 @@ import { getCurrentUser } from '@store/modules/auth/actions'
 import Wrapper from '@components/Wrapper'
 import { useCurrentUser } from '@store/modules/auth/actions'
 
-const Second = () => {
+const Second = ({ navigation }) => {
   const currentUserQuery = useCurrentUser()
 
   const logout = () => {

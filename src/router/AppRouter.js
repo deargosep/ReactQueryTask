@@ -15,27 +15,35 @@ import { useQuery, QueryCache, useQueryClient } from 'react-query'
 
 const Stack = createNativeStackNavigator()
 
-const queryCache = new QueryCache({
-  onError: (error) => {
-    console.log(error)
-  },
-  onSuccess: (data) => {
-    console.log(data)
-  }
-})
-
 const AppRouter = () => {
   const dispatch = useDispatch()
 
-  const currentUserQuery = useCurrentUser({ enabled: true })
+  const [userError, setUserError] = React.useState(true)
+
+  const queryCache = new QueryCache()
   const queryClient = useQueryClient()
-  const currentUser = queryClient.getQueryData('getCurrentUser').data
-  // currentUserQuery.data?.data
-  // queryCache.subscribe((ev) => console.log(ev))
-  // const currentUserQuery.isLoading = useSelector(currentUserLoadingSelector)
+  const currentUserQuery = useCurrentUser()
+  const currentUser = currentUserQuery.data?.data ?? currentUserQuery.error
+  const subscribe = (queryCacheNotifyEvent) => {
+    console.log(queryCacheNotifyEvent)
+    if (queryCacheNotifyEvent?.action?.error?.status === 401) {
+      setUserError(true)
+    } else {
+      if (queryCacheNotifyEvent?.action?.data?.data?.phone) {
+        setUserError(false)
+      }
+    }
+  }
+  React.useEffect(() => {
+    queryClient.getQueryCache().subscribe(subscribe)
+  }, [])
 
   if (currentUserQuery.isLoading) return null
-  if (currentUser && (currentUser.fullName || currentUser.photo)) {
+  if (
+    currentUser &&
+    (currentUser.fullName || currentUser.photo) &&
+    !userError
+  ) {
     return (
       <Stack.Navigator
         initialRouteName="Tabs"
@@ -46,7 +54,7 @@ const AppRouter = () => {
         <Stack.Screen name="Tabs" component={TabNavigator} />
       </Stack.Navigator>
     )
-  } else if (!currentUser) {
+  } else if (!currentUser || userError) {
     return (
       <Stack.Navigator
         initialRouteName="Auth"
@@ -63,7 +71,11 @@ const AppRouter = () => {
         />
       </Stack.Navigator>
     )
-  } else if (currentUser && (!currentUser.fullName || !currentUser.photo)) {
+  } else if (
+    !userError &&
+    currentUser &&
+    (!currentUser.fullName || !currentUser.photo)
+  ) {
     return (
       <Stack.Navigator
         initialRouteName={'EnterProfile'}
