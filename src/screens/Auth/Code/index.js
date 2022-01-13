@@ -27,6 +27,7 @@ import {
   useSendCode
 } from 'store/modules/auth/actions'
 import { useQuery, queryCache, QueryCache, useQueryClient } from 'react-query'
+import { useQueryGet, useQueryPost } from 'store/hooks'
 
 const CELL_COUNT = 4
 
@@ -52,21 +53,21 @@ const Code = ({ navigation, route }) => {
 
   const queryClient = useQueryClient()
 
-  const currentUserQuery = useCurrentUser()
+  const currentUserQuery = useQueryGet('currentUser')
   const currentUser = currentUserQuery?.data?.data
   console.log(currentUser)
 
-  const registerByPhone = useLogin({
+  const registerByPhone = useQueryPost('login', {
     phone: route.params.user.phone,
     source: 'current'
   })
 
-  const login = useLogin({
+  const login = useQueryPost('login', {
     login: route.params.user.phone,
     userType: loginType
   })
   console.log('number:', route.params.user)
-  const code = useSendCode({
+  const code = useQueryPost('sendCode', {
     phone: route.params.user.phone,
     password: value,
     userType: loginType
@@ -153,25 +154,6 @@ const Code = ({ navigation, route }) => {
           setError('auth.code.error')
       }
     })
-    // dispatch(
-    //   sendCodeAction(
-    //     {
-    //       phone: route.params.user.phone,
-    //       password: value,
-    //       userType: loginType
-    //     },
-    //     (response) => {
-    //       saveData(response, JWT_STORAGE_KEY)
-    //       if (route.params.loginType === 'specialist')
-    //         dispatch(getCurrentSpecialist())
-    //       else dispatch(getCurrentUser())
-    //     },
-    //     (error) => {
-    //       if (error.status === 401 || error.status === 404)
-    //         setError('auth.code.error')
-    //     }
-    //   )
-    // )
   }
 
   const changePhone = () => {

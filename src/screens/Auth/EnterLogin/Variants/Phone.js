@@ -13,6 +13,7 @@ import Spacer from 'components/Spacer'
 import { useDispatch } from 'react-redux'
 import { registerByPhone } from 'store/modules/auth/actions'
 import { useLogin } from 'store/modules/auth/actions'
+import { useQueryPost } from 'store/hooks'
 
 const Phone = ({ navigation, route, specialist }) => {
   const { t } = useTranslation()
@@ -30,10 +31,15 @@ const Phone = ({ navigation, route, specialist }) => {
     // TODO: Fix schema thinking there is no phone inputted when onChangeText prop is used
   })
 
-  const login = useLogin({
+  const login = useQueryPost('login', {
     login: number,
     source: 'current',
     userType: loginType
+  })
+
+  const registerByPhone = useQueryPost('registerByPhone', {
+    phone: number,
+    source: 'current'
   })
 
   const dispatch = useDispatch()
@@ -54,7 +60,7 @@ const Phone = ({ navigation, route, specialist }) => {
     console.log(route.params)
     // setLoginData({ phone, source: 'current' })
     if (route.params.isRegister) {
-      login.refetch().then((res) => {
+      registerByPhone.refetch().then((res) => {
         if (res.isSuccess) {
           navigation.navigate('Code', {
             user: { rawPhone, phone: number },

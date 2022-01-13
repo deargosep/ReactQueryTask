@@ -12,9 +12,10 @@ import { JWT_STORAGE_KEY, removeItemValue } from 'utils/asyncStorage'
 import { getCurrentUser } from 'store/modules/auth/actions'
 import Wrapper from 'components/Wrapper'
 import { useCurrentUser } from 'store/modules/auth/actions'
+import { useQueryGet } from 'store/hooks'
 
 const Second = ({ navigation }) => {
-  const currentUserQuery = useCurrentUser()
+  const currentUserQuery = useQueryGet('currentUser')
 
   const logout = () => {
     removeItemValue(JWT_STORAGE_KEY)

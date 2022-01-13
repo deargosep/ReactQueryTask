@@ -19,6 +19,7 @@ import SortBy from 'components/SortBy'
 import axios from 'api'
 import { Card } from 'react-native-paper'
 import { useGetClinics } from 'store/modules/clinics'
+import { useQueryGet } from 'store/hooks'
 
 const First = () => {
   const { t, i18n } = useTranslation()
@@ -26,7 +27,7 @@ const First = () => {
 
   const [sort, setSort] = React.useState('alphabet')
 
-  const clinics = useGetClinics({ sortBy: sort })
+  const clinics = useQueryGet('clinics', { sortBy: sort })
   const { data } = clinics
 
   const initQuery = () => {

@@ -12,6 +12,7 @@ import {
 import EnterProfile from 'screens/Auth/EnterProfile'
 import { useCurrentUser } from 'store/modules/auth/actions'
 import { useQuery, QueryCache, useQueryClient } from 'react-query'
+import { useQueryGet } from 'store/hooks'
 
 const Stack = createNativeStackNavigator()
 
@@ -22,7 +23,7 @@ const AppRouter = () => {
 
   const queryCache = new QueryCache()
   const queryClient = useQueryClient()
-  const currentUserQuery = useCurrentUser()
+  const currentUserQuery = useQueryGet('currentUser')
   const currentUser = currentUserQuery.data?.data ?? currentUserQuery.error
   const subscribe = (queryCacheNotifyEvent) => {
     console.log(queryCacheNotifyEvent)
