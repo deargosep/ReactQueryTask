@@ -1,4 +1,4 @@
-import { setIniialRoute } from '@store/modules/notifications/actions'
+import { setIniialRoute } from 'store/modules/notifications/actions'
 import { store } from '../../store/store'
 
 export const messageHander = (remoteMessage, initial, navigation, t) => {

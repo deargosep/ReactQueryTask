@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { useTheme } from '@theme'
+import { useTheme } from 'theme'
 import { range } from 'lodash'
 
 const styles = () => {

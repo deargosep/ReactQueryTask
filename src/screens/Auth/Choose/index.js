@@ -2,10 +2,10 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
-import { useTheme } from '@theme'
-import Wrapper from '@components/Wrapper'
-import ButtonMD from '@components/Button'
-import Spacer from '@components/Spacer'
+import { useTheme } from 'theme'
+import Wrapper from 'components/Wrapper'
+import ButtonMD from 'components/Button'
+import Spacer from 'components/Spacer'
 
 const Choose = ({ navigation, route }) => {
   const { t } = useTranslation()

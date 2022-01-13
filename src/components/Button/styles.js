@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { useTheme } from '@theme'
+import { useTheme } from 'theme'
 
 const styles = (disabled, mode, small, otherLabelStyles) => {
   const { Colors, Font } = useTheme()

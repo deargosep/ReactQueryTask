@@ -5,7 +5,7 @@ import AppRoot from './src/router/root'
 import { Provider as PaperProvider } from 'react-native-paper'
 import './src/translation'
 import { QueryClient, QueryClientProvider } from 'react-query'
-import Modals from '@components/Modals'
+import Modals from 'components/Modals'
 const queryClient = new QueryClient()
 
 const App = () => {

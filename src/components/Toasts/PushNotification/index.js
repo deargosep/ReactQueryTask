@@ -8,10 +8,10 @@ import {
 } from 'react-native'
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
-import { useTheme } from '@theme'
-import Spacer from '@components/Spacer'
+import { useTheme } from 'theme'
+import Spacer from 'components/Spacer'
 import Toast from 'react-native-toast-message'
-import { messageHander } from '@utils/firebase/notificationMessageHandler'
+import { messageHander } from 'utils/firebase/notificationMessageHandler'
 
 const PushNotification = ({ internalState }) => {
   const { t } = useTranslation()

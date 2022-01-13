@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
-import { useTheme } from '@theme'
+import { useTheme } from 'theme'
 import { ActivityIndicator } from 'react-native-paper'
 
 const Loading = () => {

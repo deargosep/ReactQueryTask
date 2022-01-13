@@ -10,12 +10,12 @@ import {
 } from 'react-native'
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
-import { useTheme } from '@theme'
+import { useTheme } from 'theme'
 import { uniqueId } from 'lodash-es'
-import Spacer from '@components/Spacer'
-// import { getSpecialistSchedule } from '@store/selectors/specialists'
+import Spacer from 'components/Spacer'
+// import { getSpecialistSchedule } from 'store/selectors/specialists'
 import { useSelector } from 'react-redux'
-import Loading from '@components/Loading'
+import Loading from 'components/Loading'
 
 const Calendar = ({
   navigation,

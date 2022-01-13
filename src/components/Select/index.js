@@ -2,7 +2,7 @@ import DropDownPicker from 'react-native-dropdown-picker'
 import React, { useState, useEffect } from 'react'
 import styles from './styles'
 import { HelperText } from 'react-native-paper'
-import { useTheme } from '@theme'
+import { useTheme } from 'theme'
 
 const Select = ({ placeholder, selectItems, formik, fieldName }) => {
   const [open, setOpen] = useState(false)

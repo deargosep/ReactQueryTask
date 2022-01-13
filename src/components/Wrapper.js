@@ -1,7 +1,7 @@
 import React from 'react'
 import { SafeAreaView } from 'react-native'
-import FocusAwareStatusBar from '@utils/focusAwareStatusBar'
-import { useTheme } from '@theme'
+import FocusAwareStatusBar from 'utils/focusAwareStatusBar'
+import { useTheme } from 'theme'
 import NoAuth from './NoAuth'
 
 const Wrapper = ({

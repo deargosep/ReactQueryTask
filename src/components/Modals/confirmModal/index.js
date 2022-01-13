@@ -2,11 +2,11 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
-import { useTheme } from '@theme'
+import { useTheme } from 'theme'
 import { Button } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
-import { setModal } from '@store/modules/modals/actions'
-import { getModal } from '@store/selectors/modal'
+import { setModal } from 'store/modules/modals/actions'
+import { getModal } from 'store/selectors/modal'
 
 const ConfirmModal = ({ navigation }) => {
   const { t } = useTranslation()

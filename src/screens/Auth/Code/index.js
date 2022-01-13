@@ -2,30 +2,30 @@ import React, { useState } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
-import { useTheme } from '@theme'
-import Wrapper from '@components/Wrapper'
+import { useTheme } from 'theme'
+import Wrapper from 'components/Wrapper'
 import {
   CodeField,
   Cursor,
   useBlurOnFulfill,
   useClearByFocusCell
 } from 'react-native-confirmation-code-field'
-import Spacer from '@components/Spacer'
-import ButtonMD from '@components/Button'
+import Spacer from 'components/Spacer'
+import ButtonMD from 'components/Button'
 import { useDispatch } from 'react-redux'
-import { sendCode as sendCodeAction } from '@store/modules/auth/actions'
+import { sendCode as sendCodeAction } from 'store/modules/auth/actions'
 import { saveData, JWT_STORAGE_KEY } from '../../../utils/asyncStorage'
 import {
   getCurrentUser,
   // login,
   registerByPhone
-} from '@store/modules/auth/actions'
-// import { getCurrentSpecialist } from '@store/modules/auth/actions'
+} from 'store/modules/auth/actions'
+// import { getCurrentSpecialist } from 'store/modules/auth/actions'
 import {
   useLogin,
   useCurrentUser,
   useSendCode
-} from '@store/modules/auth/actions'
+} from 'store/modules/auth/actions'
 import { useQuery, queryCache, QueryCache, useQueryClient } from 'react-query'
 
 const CELL_COUNT = 4

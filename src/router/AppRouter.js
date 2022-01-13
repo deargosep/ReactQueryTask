@@ -7,10 +7,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   currentUserLoadingSelector,
   currentUserSelector
-} from '@store/selectors/auth'
-// import { getCurrentUser } from '@store/modules/auth/actions'
-import EnterProfile from '@screens/Auth/EnterProfile'
-import { useCurrentUser } from '@store/modules/auth/actions'
+} from 'store/selectors/auth'
+// import { getCurrentUser } from 'store/modules/auth/actions'
+import EnterProfile from 'screens/Auth/EnterProfile'
+import { useCurrentUser } from 'store/modules/auth/actions'
 import { useQuery, QueryCache, useQueryClient } from 'react-query'
 
 const Stack = createNativeStackNavigator()

@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import { useTheme } from '@theme'
+import { useTheme } from 'theme'
 import styles from './styles'
-import ButtonMD from '@components/Button'
+import ButtonMD from 'components/Button'
 import { useTranslation } from 'react-i18next'
 
 const NoAuth = ({ text }) => {

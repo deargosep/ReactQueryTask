@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { TextInput as MDTextInput, HelperText } from 'react-native-paper'
-import { useTheme } from '@theme'
+import { useTheme } from 'theme'
 
 const Input = ({
   label,

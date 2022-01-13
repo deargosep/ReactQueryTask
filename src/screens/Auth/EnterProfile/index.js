@@ -5,12 +5,12 @@ import * as Yup from 'yup'
 import { Formik } from 'formik'
 import TextInputMask from 'react-native-text-input-mask'
 import { useTranslation } from 'react-i18next'
-import { useTheme } from '@theme'
-import Wrapper from '@components/Wrapper'
-import Input from '@components/Input'
-import Select from '@components/Select'
-import Button from '@components/Button'
-import Spacer from '@components/Spacer'
+import { useTheme } from 'theme'
+import Wrapper from 'components/Wrapper'
+import Input from 'components/Input'
+import Select from 'components/Select'
+import Button from 'components/Button'
+import Spacer from 'components/Spacer'
 import { HelperText } from 'react-native-paper'
 import { launchImageLibrary } from 'react-native-image-picker'
 import { useDispatch, useSelector } from 'react-redux'
@@ -18,9 +18,9 @@ import {
   uploadAvatar as uploadAvatarAction,
   editProfile,
   getCurrentUser
-} from '@store/modules/auth/actions'
-import { setModal } from '@store/modules/modals/actions'
-import { currentUserSelector } from '@store/selectors/auth'
+} from 'store/modules/auth/actions'
+import { setModal } from 'store/modules/modals/actions'
+import { currentUserSelector } from 'store/selectors/auth'
 import { useQueryClient } from 'react-query'
 
 const EnterProfile = ({ navigation, route }) => {

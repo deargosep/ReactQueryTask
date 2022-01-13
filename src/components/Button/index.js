@@ -1,6 +1,6 @@
 import React from 'react'
 import { ActivityIndicator, Button } from 'react-native-paper'
-import { useTheme } from '@theme'
+import { useTheme } from 'theme'
 import styles from './styles'
 
 const ButtonMD = ({

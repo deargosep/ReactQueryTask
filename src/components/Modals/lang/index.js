@@ -2,9 +2,9 @@ import React from 'react'
 import { View, Text, Image, TouchableOpacity } from 'react-native'
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
-import { useTheme } from '@theme'
+import { useTheme } from 'theme'
 import { useDispatch } from 'react-redux'
-import { setModal } from '@store/modules/modals/actions'
+import { setModal } from 'store/modules/modals/actions'
 
 const Lang = ({ navigation }) => {
   const { t } = useTranslation()

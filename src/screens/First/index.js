@@ -10,15 +10,15 @@ import {
 } from 'react-native'
 import styles from './styles'
 import { useTranslation } from 'react-i18next'
-import { useTheme } from '@theme'
-import ButtonMD from '@components/Button'
+import { useTheme } from 'theme'
+import ButtonMD from 'components/Button'
 import { useQuery, useQueryClient, useMutation } from 'react-query'
-import Loading from '@components/Loading'
-import Wrapper from '@components/Wrapper'
-import SortBy from '@components/SortBy'
-import axios from '@api'
+import Loading from 'components/Loading'
+import Wrapper from 'components/Wrapper'
+import SortBy from 'components/SortBy'
+import axios from 'api'
 import { Card } from 'react-native-paper'
-import { useGetClinics } from '@store/modules/clinics'
+import { useGetClinics } from 'store/modules/clinics'
 
 const First = () => {
   const { t, i18n } = useTranslation()
