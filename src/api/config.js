@@ -1,7 +1,9 @@
 const config = {
   axios: {
-    baseURL: 'http://my_doctor.local/api/v1',
-    baseImgUrl: 'http://my_doctor.local/storage/'
+    // baseURL: 'http://my_doctor.local/api/v1',
+    // baseImgUrl: 'http://my_doctor.local/storage/'
+    baseURL: 'https://my-doctor.staging.moonsolution.ru/api/v1',
+    baseImgUrl: 'https://my-doctor.staging.moonsolution.ru/storage/'
   },
 
   respBody(response) {
