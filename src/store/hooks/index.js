@@ -13,22 +13,28 @@ const defaultParams = {
   retry: false
 }
 
+// constants
+const CURRENT_SPECIALIST = 'currentSpecialist'
+const CURRENT_USER = 'currentUser'
+const CLINICS = 'clinics'
+
+const REGISTER_BY_PHONE = 'registerByPhone'
+const LOGIN = 'login'
+const SEND_CODE = 'sendCode'
+const EDIT_PROFILE = 'editProfile'
+
 const useQueryGet = (key, data) => {
   switch (key) {
     //  auth
-    case 'currentSpecialist':
-      return useQuery(
-        'getCurrentSpecialist',
-        _getCurrentSpecialist,
-        defaultParams
-      )
-    case 'currentUser':
-      return useQuery('getCurrentUser', _getCurrentUser, {
+    case CURRENT_SPECIALIST:
+      return useQuery(CURRENT_SPECIALIST, _getCurrentSpecialist, defaultParams)
+    case CURRENT_USER:
+      return useQuery(CURRENT_USER, _getCurrentUser, {
         ...defaultParams,
         ...data
       })
-    case 'clinics':
-      return useInfiniteQuery(['clinics', data], _getClinics, {
+    case CLINICS:
+      return useInfiniteQuery([CLINICS, data], _getClinics, {
         keepPreviousData: false,
         getNextPageParam: (lastPage, pages) => pages.length + 1
       })
@@ -41,16 +47,16 @@ const useQueryGet = (key, data) => {
 const useQueryPost = (key, data) => {
   switch (key) {
     //  auth
-    case 'registerByPhone':
+    case REGISTER_BY_PHONE:
       return useQuery(
-        'registerByPhone',
+        REGISTER_BY_PHONE,
         () => _registerByPhone(data),
         defaultParams
       )
-    case 'login':
-      return useQuery('login', () => _login(data), defaultParams)
-    case 'sendCode':
-      return useQuery('sendCode', () => _sendCode(data), defaultParams)
+    case LOGIN:
+      return useQuery(LOGIN, () => _login(data), defaultParams)
+    case SEND_CODE:
+      return useQuery(SEND_CODE, () => _sendCode(data), defaultParams)
     default:
       console.error('wrong key!')
       break
@@ -59,8 +65,8 @@ const useQueryPost = (key, data) => {
 
 const useQueryPatch = (key, data) => {
   switch (key) {
-    case 'editProfile':
-      return useQuery('editProfile', () => _editProfile(data), defaultParams)
+    case EDIT_PROFILE:
+      return useQuery(EDIT_PROFILE, () => _editProfile(data), defaultParams)
     default:
       console.error('wrong key!')
       break

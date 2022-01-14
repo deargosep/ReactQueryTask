@@ -36,7 +36,7 @@ export const useUploadPhoto = (data) =>
   useQuery('uploadPhoto', () => _uploadPhoto(data), defaultParams)
 
 export const useCurrentUser = (data) =>
-  useQuery('getCurrentUser', _getCurrentUser, { ...defaultParams, ...data })
+  useQuery('currentUser', _getCurrentUser, { ...defaultParams, ...data })
 
 export const useCurrentSpecialist = (data) =>
-  useQuery('getCurrentSpecialist', _getCurrentSpecialist, defaultParams)
+  useQuery('currentSpecialist', _getCurrentSpecialist, defaultParams)
